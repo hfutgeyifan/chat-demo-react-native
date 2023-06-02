@@ -1,16 +1,15 @@
 /* eslint-disable react-native/no-inline-styles */
-import {Image, Text, useTheme} from '@rneui/themed';
-import React, {useEffect, useRef} from 'react';
-import {TouchableOpacity, StyleSheet, View, Animated} from 'react-native';
+import { Image, Text, useTheme } from '@rneui/themed';
+import React, { useEffect, useRef } from 'react';
+import { TouchableOpacity, StyleSheet, View, Animated } from 'react-native';
 import RNFS from 'react-native-fs';
-import type {V2TimMessage} from 'react-native-tim-js';
-import {MessageDownload} from '../../../utils/message_download';
-import {updateMessageProgress, useTUIChatContext} from '../../../store';
+import type { V2TimMessage } from 'react-native-tim-js';
+import { MessageDownload } from '../../../utils/message_download';
+import { updateMessageProgress, useTUIChatContext } from '../../../store';
 import FileViewer from 'react-native-file-viewer';
-import FastImage from 'react-native-fast-image';
 
-const FileIcon = (props: {fileFormat: string}) => {
-  const {fileFormat} = props;
+const FileIcon = (props: { fileFormat: string }) => {
+  const { fileFormat } = props;
   const fileMap = new Map<string, string>([
     ['doc', 'word.png'],
     ['docx', 'word.png'],
@@ -66,7 +65,6 @@ const FileIcon = (props: {fileFormat: string}) => {
 
   return (
     <Image
-      ImageComponent={FastImage}
       source={getFileIconString()}
       style={styles.fileIconContainer}
     />
@@ -79,9 +77,9 @@ export const FileElement = (props: {
 }) => {
   // const [count, setCount] = useState(0);
   const loaderValue = useRef(new Animated.Value(0)).current;
-  const {message, isReplyMessage} = props;
-  const {theme} = useTheme();
-  const {dispatch} = useTUIChatContext();
+  const { message, isReplyMessage } = props;
+  const { theme } = useTheme();
+  const { dispatch } = useTUIChatContext();
   const isSelf = message.isSelf ?? false;
   const fileName = message.fileElem?.fileName ?? '';
   const fileSize = message.fileElem?.fileSize ?? 0;
@@ -120,7 +118,7 @@ export const FileElement = (props: {
     console.log('press');
     RNFS.exists(filePath).then(isExit => {
       if (isExit) {
-        FileViewer.open(filePath, {showOpenWithDialog: true}) // absolute-path-to-my-local-file.
+        FileViewer.open(filePath, { showOpenWithDialog: true }) // absolute-path-to-my-local-file.
           .then(() => {
             console.log('open success');
           })
@@ -163,8 +161,8 @@ export const FileElement = (props: {
             progress === 1
               ? theme.colors.secondary
               : isReplyMessage
-              ? theme.colors.white
-              : theme.colors.primary,
+                ? theme.colors.white
+                : theme.colors.primary,
           borderTopLeftRadius: isSelf ? 10 : 2,
           borderTopRightRadius: isSelf ? 2 : 10,
           borderBottomRightRadius: 10,
@@ -189,11 +187,11 @@ export const FileElement = (props: {
             paddingTop: isReplyMessage ? 10 : 15,
           }}>
           <FileIcon fileFormat={fileFormat} />
-          <View style={{...styles.fileDetail, marginLeft: isSelf ? 0 : 12}}>
+          <View style={{ ...styles.fileDetail, marginLeft: isSelf ? 0 : 12 }}>
             <Text numberOfLines={1} ellipsizeMode="middle">
               {fileName}
             </Text>
-            <Text h3 style={{color: theme.colors.grey4, fontWeight: '400'}}>
+            <Text h3 style={{ color: theme.colors.grey4, fontWeight: '400' }}>
               {showFileSize()}
             </Text>
           </View>

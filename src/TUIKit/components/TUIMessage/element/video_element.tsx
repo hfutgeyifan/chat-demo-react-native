@@ -1,26 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {V2TimMessage, TencentImSDKPlugin} from 'react-native-tim-js';
-import {updateMessateItem, useTUIChatContext} from '../../../store';
-import {View} from 'react-native';
-import {StyleSheet} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { V2TimMessage, TencentImSDKPlugin } from 'react-native-tim-js';
+import { updateMessateItem, useTUIChatContext } from '../../../store';
+import { View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import Modal from 'react-native-modal';
-import {Text, Image} from '@rneui/themed';
-import {MessageUtils} from '../../../utils/message';
-import {ScreenHeight, ScreenWidth} from '@rneui/base';
-import {VideoScreen} from '../../VideoScreen/video_screen';
-import {TouchableOpacity} from 'react-native-gesture-handler';
+import { Text, Image } from '@rneui/themed';
+import { MessageUtils } from '../../../utils/message';
+import { ScreenHeight, ScreenWidth } from '@rneui/base';
+import { VideoScreen } from '../../VideoScreen/video_screen';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import RNFS from 'react-native-fs';
-import FastImage from 'react-native-fast-image';
 
 export const VideoElement = (props: {
   message: V2TimMessage;
   isReplyMessage?: boolean;
 }) => {
-  const {message, isReplyMessage} = props;
-  const {dispatch} = useTUIChatContext();
+  const { message, isReplyMessage } = props;
+  const { dispatch } = useTUIChatContext();
   const [isVisible, setVisible] = useState(false);
   const [snapShotPath, setSnapShotPath] = useState('');
-  const {msgID, videoElem, progress} = message;
+  const { msgID, videoElem, progress } = message;
   const maxSnapshotWidth = isReplyMessage ? 150 : ScreenWidth * 0.5;
   const maxSnapshotHeight = isReplyMessage ? 100 : 300;
   const [videoUrl, setVideoUrl] = useState('');
@@ -133,8 +132,7 @@ export const VideoElement = (props: {
         activeOpacity={0.8}>
         {snapShotPath !== '' && (
           <Image
-            ImageComponent={FastImage}
-            source={{uri: snapShotPath}}
+            source={{ uri: snapShotPath }}
             style={{
               ...styles.video,
               width: snapshotWidth,
@@ -148,7 +146,6 @@ export const VideoElement = (props: {
 
       <View style={styles.playContainer}>
         <Image
-          ImageComponent={FastImage}
           source={require('../../../../assets/play.png')}
           style={{
             width: styles.playContainer.width,
@@ -173,7 +170,7 @@ export const VideoElement = (props: {
         swipeDirection={['down', 'up', 'left', 'right']}
         onSwipeComplete={() => setVisible(false)}
         swipeThreshold={100}
-        style={{margin: 0}}>
+        style={{ margin: 0 }}>
         <VideoScreen
           url={videoUrl}
           message={message}

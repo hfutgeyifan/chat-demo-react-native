@@ -1,20 +1,19 @@
-import {Icon, Image, makeStyles, Text} from '@rneui/themed';
-import React, {forwardRef, useImperativeHandle, useRef, useState} from 'react';
+import { Icon, Image, makeStyles, Text } from '@rneui/themed';
+import React, { forwardRef, useImperativeHandle, useRef, useState } from 'react';
 import {
   NativeSyntheticEvent,
   TextInput,
   TextInputSubmitEditingEventData,
 } from 'react-native';
-import {View} from 'react-native';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import {useLoginUser} from '../../hooks/useLoginUser';
-import {setRepliedMessage, useTUIChatContext} from '../../store';
-import {MessageService} from './message_service';
-import {VoiceButton} from './tui_message_voice_button';
+import { View } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useLoginUser } from '../../hooks/useLoginUser';
+import { setRepliedMessage, useTUIChatContext } from '../../store';
+import { MessageService } from './message_service';
+import { VoiceButton } from './tui_message_voice_button';
 import runes from 'runes';
-import {useRepliedMessage} from '../../store/TUIChat/selector';
-import {MessageUtils} from '../../utils/message';
-import FastImage from 'react-native-fast-image';
+import { useRepliedMessage } from '../../store/TUIChat/selector';
+import { MessageUtils } from '../../utils/message';
 
 interface TUIMessageInputInterface {
   loginUserID: string;
@@ -55,7 +54,7 @@ export const TUIMessageInput = forwardRef<
   const [showVoiceRecord, setShowVoiceRecord] = useState(false);
   const textInputRef = useRef<TextInput | null>(null);
   const loginUserInfo = useLoginUser(props.loginUserID);
-  const {dispatch} = useTUIChatContext();
+  const { dispatch } = useTUIChatContext();
   const messageService = new MessageService(dispatch, {
     userInfo: loginUserInfo,
     convID,
@@ -123,7 +122,7 @@ export const TUIMessageInput = forwardRef<
             ellipsizeMode="tail"
             numberOfLines={3}
             h3
-            style={{color: '#8f959e'}}>
+            style={{ color: '#8f959e' }}>
             {getRepliedMessage()}
           </Text>
           <Icon
@@ -137,7 +136,6 @@ export const TUIMessageInput = forwardRef<
       <View style={styles.rowContainer}>
         {showSound && (
           <Image
-            ImageComponent={FastImage}
             source={
               showVoiceRecord
                 ? require('../../../assets/keyboard.png')
@@ -164,7 +162,7 @@ export const TUIMessageInput = forwardRef<
             <VoiceButton onSend={sendSoundMessage} />
           ) : (
             <TextInput
-              onKeyPress={({nativeEvent}) => {
+              onKeyPress={({ nativeEvent }) => {
                 if (nativeEvent.key === 'Backspace') {
                   if (repliedMessage && text === '') {
                     handleBackSpaceTap();
@@ -182,10 +180,9 @@ export const TUIMessageInput = forwardRef<
         </View>
         {showFace && (
           <Image
-            ImageComponent={FastImage}
             source={
               driverName === 'emoji'
-                ? require('../../../assets/keyboard.png')
+                ? require('@../../../assets/keyboard.png')
                 : require('../../../assets/face.png')
             }
             // eslint-disable-next-line react-native/no-inline-styles
@@ -203,7 +200,6 @@ export const TUIMessageInput = forwardRef<
         )}
         {showToolBox && (
           <Image
-            ImageComponent={FastImage}
             source={require('../../../assets/more.png')}
             style={styles.iconSize}
             onPress={props.onToolBoxTap}

@@ -1,20 +1,19 @@
-import {Text, Image} from '@rneui/themed';
-import React, {useEffect, useState} from 'react';
-import {TouchableOpacity} from 'react-native';
-import {StyleSheet} from 'react-native';
-import {View} from 'react-native';
-import {TencentImSDKPlugin} from 'react-native-tim-js';
-import type {V2TimMessage} from 'react-native-tim-js/lib/typescript/src/interface';
-import {updateMessateItem, useTUIChatContext} from '../../../store';
-import {SOUND_READ} from '../../../constants';
-import {AudioPlayer} from '../../../utils/audio_player';
-import FastImage from 'react-native-fast-image';
+import { Text, Image } from '@rneui/themed';
+import React, { useEffect, useState } from 'react';
+import { TouchableOpacity } from 'react-native';
+import { StyleSheet } from 'react-native';
+import { View } from 'react-native';
+import { TencentImSDKPlugin } from 'react-native-tim-js';
+import type { V2TimMessage } from 'react-native-tim-js/lib/typescript/src/interface';
+import { updateMessateItem, useTUIChatContext } from '../../../store';
+import { SOUND_READ } from '../../../constants';
+import { AudioPlayer } from '../../../utils/audio_player';
 
-export const AudioElement = (props: {message: V2TimMessage}) => {
-  const {message} = props;
+export const AudioElement = (props: { message: V2TimMessage }) => {
+  const { message } = props;
   const [stateMessage, setStateMessage] = useState(message);
   const [isPlaying, setPlaying] = useState(false);
-  const {dispatch} = useTUIChatContext();
+  const { dispatch } = useTUIChatContext();
   const isSelf = stateMessage.isSelf ?? false;
   const img = isSelf
     ? require('../../../../assets/voice_send.png')
@@ -42,7 +41,7 @@ export const AudioElement = (props: {message: V2TimMessage}) => {
   };
 
   const playSound = async () => {
-    const {soundElem, localCustomInt, msgID} = stateMessage;
+    const { soundElem, localCustomInt, msgID } = stateMessage;
     const soundPath = soundElem?.path ? 'file://' + soundElem?.path : undefined;
     const localUrl = soundElem?.localUrl
       ? 'file://' + soundElem?.localUrl
@@ -54,7 +53,7 @@ export const AudioElement = (props: {message: V2TimMessage}) => {
         playPath,
         playCallback => {
           setPlaying(true);
-          const {currentPosition, duration} = playCallback;
+          const { currentPosition, duration } = playCallback;
           if (currentPosition === duration) {
             AudioPlayer.stop();
             setPlaying(false);
@@ -82,7 +81,7 @@ export const AudioElement = (props: {message: V2TimMessage}) => {
   };
 
   useEffect(() => {
-    const {msgID, soundElem, progress} = stateMessage;
+    const { msgID, soundElem, progress } = stateMessage;
     const haveUrl = !!soundElem?.url;
     const havePath = !!soundElem?.path;
     const haveLocalUrl = !!soundElem?.localUrl;
@@ -92,7 +91,7 @@ export const AudioElement = (props: {message: V2TimMessage}) => {
           .getMessageManager()
           .getMessageOnlineUrl(msgID)
           .then(response => {
-            const {code, data} = response;
+            const { code, data } = response;
             if (code === 0) {
               stateMessage.soundElem = data.soundElem;
               setStateMessage(stateMessage);
@@ -126,7 +125,6 @@ export const AudioElement = (props: {message: V2TimMessage}) => {
           width: getSoundLen(),
         }}>
         <Image
-          ImageComponent={FastImage}
           source={isPlaying ? getVoicePlayGif() : img}
           style={styles.img}
         />

@@ -1,17 +1,16 @@
-import {Image} from '@rneui/themed';
-import React, {useEffect, useState} from 'react';
-import {View} from 'react-native';
-import {StyleSheet, TouchableOpacity} from 'react-native';
-import {V2TimMessage, TencentImSDKPlugin} from 'react-native-tim-js';
-import {CameraRoll} from '@react-native-camera-roll/camera-roll';
-import {MessageUtils} from '../../../utils/message';
+import { Image } from '@rneui/themed';
+import React, { useEffect, useState } from 'react';
+import { View } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
+import { V2TimMessage, TencentImSDKPlugin } from 'react-native-tim-js';
+import { CameraRoll } from '@react-native-camera-roll/camera-roll';
+import { MessageUtils } from '../../../utils/message';
 import ImageViewer from '../../ImageView';
 import Modal from 'react-native-modal';
-import {MessageDownload} from '../../../utils/message_download';
+import { MessageDownload } from '../../../utils/message_download';
 import RNFS from 'react-native-fs';
-import {Gesture} from 'react-native-gesture-handler';
-import {ScreenWidth} from '@rneui/base';
-import FastImage from 'react-native-fast-image';
+import { Gesture } from 'react-native-gesture-handler';
+import { ScreenWidth } from '@rneui/base';
 
 export const ImageElement = (props: {
   message: V2TimMessage;
@@ -19,7 +18,7 @@ export const ImageElement = (props: {
 }) => {
   const [visible, setIsVisible] = useState(false);
   const [opacity, setOpacity] = useState(1);
-  const {imageElem, msgID, progress} = props.message;
+  const { imageElem, msgID, progress } = props.message;
   const maxImageElementWidth = props.isReplyMessage ? 150 : ScreenWidth * 0.5;
   const maxImageHeight = props.isReplyMessage ? 100 : 256;
   const [imagePath, setImagePath] = useState(' ');
@@ -111,7 +110,7 @@ export const ImageElement = (props: {
 
   const renderFooter = () => {
     return (
-      <View style={{...styles.footer, width: ScreenWidth}}>
+      <View style={{ ...styles.footer, width: ScreenWidth }}>
         <Image
           source={require('../../../../assets/close.png')}
           style={styles.icon}
@@ -157,7 +156,6 @@ export const ImageElement = (props: {
           setIsVisible(true);
         }}>
         <Image
-          ImageComponent={FastImage}
           containerStyle={[
             styles.img,
             {
@@ -177,7 +175,7 @@ export const ImageElement = (props: {
         backdropOpacity={opacity}
         animationIn="fadeIn"
         animationOut="fadeOutDown"
-        style={{margin: 0}}>
+        style={{ margin: 0 }}>
         <ImageViewer
           swipeDownThreshold={100}
           onSwipeDown={() => setIsVisible(false)}

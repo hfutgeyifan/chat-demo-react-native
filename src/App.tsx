@@ -1,11 +1,11 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import HomeScreen from './pages/home';
 import LoginScreen from './pages/login';
-import {RootStackParamList} from './interface';
-import {MergerMessageScreen} from './pages/merger_message_screen';
-import {ChatScreen} from './pages/chat';
+import { RootStackParamList } from './interface';
+import { MergerMessageScreen } from './pages/merger_message_screen';
+import { ChatScreen } from './pages/chat';
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 

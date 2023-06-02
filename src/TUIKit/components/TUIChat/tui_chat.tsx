@@ -1,13 +1,13 @@
-import {ThemeProvider} from '@rneui/themed';
-import React, {Fragment, useCallback, useMemo, useRef, useState} from 'react';
-import {Animated, findNodeHandle, StyleSheet} from 'react-native';
-import {View} from 'react-native';
-import {SafeAreaProvider} from 'react-native-safe-area-context';
-import type {V2TimMessage} from 'react-native-tim-js';
-import {useMessageList} from '../../hooks/useMessageList';
-import {TUIChatContextProvider} from '../../store';
-import {tuiChatTheme} from '../../theme';
-import {TUIChatHeader} from '../TUIChatHeader';
+import { ThemeProvider } from '@rneui/themed';
+import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react';
+import { Animated, findNodeHandle, StyleSheet } from 'react-native';
+import { View } from 'react-native';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+import type { V2TimMessage } from 'react-native-tim-js';
+import { useMessageList } from '../../hooks/useMessageList';
+import { TUIChatContextProvider } from '../../store';
+import { tuiChatTheme } from '../../theme';
+import { TUIChatHeader } from '../TUIChatHeader';
 import {
   AudioElement,
   composeKeyboardHeightWithMessageBubble,
@@ -24,30 +24,30 @@ import {
   withEditableRevokeMessage,
   withTapMergerElement,
 } from '../TUIMessage/element';
-import {withElement} from '../TUIMessage/tui_message';
+import { withElement } from '../TUIMessage/tui_message';
 import {
   TUIMessageInput,
   TUIMessageInputRef,
 } from '../TUIMessageInput/tui_message_input';
-import {TUIMessageList} from '../TUIMessageList';
+import { TUIMessageList } from '../TUIMessageList';
 import {
   KeyboardInsetsView,
   getEdgeInsetsForView,
 } from 'react-native-keyboard-insets';
-import {ViewDriver} from './driver/viewDriver';
-import type {Driver} from './driver/driver';
-import {KeyboardDriver} from './driver/keyboardDriver';
-import {TUIMessageEmoji} from '../TUIMessageInput/tui_message_emoji';
-import {TUIMessageToolBox} from '../TUIMessageInput/tui_message_tool_box';
-import {Gesture, GestureDetector} from 'react-native-gesture-handler';
-import type {TUIChatProps} from '../../interface';
-import {MessageAvatar} from '../TUIMessage/element/message_avatar';
-import {ScreenHeight, ScreenWidth} from '@rneui/base';
+import { ViewDriver } from './driver/viewDriver';
+import type { Driver } from './driver/driver';
+import { KeyboardDriver } from './driver/keyboardDriver';
+import { TUIMessageEmoji } from '../TUIMessageInput/tui_message_emoji';
+import { TUIMessageToolBox } from '../TUIMessageInput/tui_message_tool_box';
+import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
+import type { TUIChatProps } from '../../interface';
+import { MessageAvatar } from '../TUIMessage/element/message_avatar';
+import { ScreenHeight, ScreenWidth } from '@rneui/base';
 // import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 export const TUIChat = (props: TUIChatProps) => {
   const {
-    conversation: {showName, faceUrl},
+    conversation: { showName, faceUrl },
     showChatHeader,
     initialMessageList,
   } = props;
@@ -78,8 +78,8 @@ const MessageViewWithInput = (props: TUIChatProps) => {
     textInputOption,
     onMergeMessageTap,
   } = props;
-  const {loadMore} = useMessageList(conversation);
-  const {userID, groupID, type} = conversation;
+  const { loadMore } = useMessageList(conversation);
+  const { userID, groupID, type } = conversation;
   const convID = type === 1 ? userID : groupID;
   const tuiMessageInputRef = useRef<TUIMessageInputRef>(null);
   const senderRef = useRef<View>(null);
@@ -222,84 +222,86 @@ const MessageViewWithInput = (props: TUIChatProps) => {
   });
 
   return (
-    <Fragment>
-      <GestureDetector gesture={gesture}>
-        <Animated.View
-          style={[
-            styles.fill,
-            messageListContainerStyle,
-            {backgroundColor: 'white'},
-          ]}
-          ref={(ref: View | null | undefined) => (viewNode.current = ref)}
-          onLayout={() => {
-            viewNode.current?.measure((x, y, width, height) => {
-              keyboard.onFillMessageLayout(height);
-              emoji.onFillMessageLayout(height);
-              toolbox.onFillMessageLayout(height);
-            });
-          }}>
-          <TUIMessageList
-            MessageElement={messageItemOption?.ItemComponent ?? MessageElement}
-            onLoadMore={onLoadMore}
-            unmount={unMount}
-            onLayout={event => {
-              emoji.onMessageListLayout(event);
-              toolbox.onMessageListLayout(event);
-              keyboard.onMessageListLayout(event);
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Fragment>
+        <GestureDetector gesture={gesture}>
+          <Animated.View
+            style={[
+              styles.fill,
+              messageListContainerStyle,
+              { backgroundColor: 'white' },
+            ]}
+            ref={(ref: View | null | undefined) => (viewNode.current = ref)}
+            onLayout={() => {
+              viewNode.current?.measure((x, y, width, height) => {
+                keyboard.onFillMessageLayout(height);
+                emoji.onFillMessageLayout(height);
+                toolbox.onFillMessageLayout(height);
+              });
+            }}>
+            <TUIMessageList
+              MessageElement={messageItemOption?.ItemComponent ?? MessageElement}
+              onLoadMore={onLoadMore}
+              unmount={unMount}
+              onLayout={event => {
+                emoji.onMessageListLayout(event);
+                toolbox.onMessageListLayout(event);
+                keyboard.onMessageListLayout(event);
+              }}
+              onScroll={() => {
+                if (driver?.name === 'emoji') {
+                  emoji.shown && emoji.hide(driverState);
+                } else {
+                  toolbox.shown && toolbox.hide(driverState);
+                }
+              }}
+            />
+          </Animated.View>
+        </GestureDetector>
+        <KeyboardInsetsView
+          style={[mainStyle]}
+          onKeyboard={keyboard.createCallback(driverState)}
+          onLayout={onLayout}>
+          <TUIMessageInput
+            ref={tuiMessageInputRef}
+            loginUserID={loginUserID}
+            showFace={textInputOption?.showFace}
+            showSound={textInputOption?.showSound}
+            showToolBox={textInputOption?.showToolBox}
+            convID={convID ?? ''}
+            convType={type ?? 1}
+            onEmojiTap={() => {
+              emoji.toggle(driverState);
             }}
-            onScroll={() => {
+            driverName={driver?.name}
+            onToolBoxTap={() => {
+              toolbox.toggle(driverState);
+            }}
+            hideAllPanel={() => {
               if (driver?.name === 'emoji') {
-                emoji.shown && emoji.hide(driverState);
+                emoji.hide(driverState);
               } else {
-                toolbox.shown && toolbox.hide(driverState);
+                toolbox.hide(driverState);
               }
             }}
           />
-        </Animated.View>
-      </GestureDetector>
-      <KeyboardInsetsView
-        style={[mainStyle]}
-        onKeyboard={keyboard.createCallback(driverState)}
-        onLayout={onLayout}>
-        <TUIMessageInput
-          ref={tuiMessageInputRef}
+        </KeyboardInsetsView>
+        <TUIMessageToolBox
           loginUserID={loginUserID}
-          showFace={textInputOption?.showFace}
-          showSound={textInputOption?.showSound}
-          showToolBox={textInputOption?.showToolBox}
           convID={convID ?? ''}
           convType={type ?? 1}
-          onEmojiTap={() => {
-            emoji.toggle(driverState);
-          }}
-          driverName={driver?.name}
-          onToolBoxTap={() => {
-            toolbox.toggle(driverState);
-          }}
-          hideAllPanel={() => {
-            if (driver?.name === 'emoji') {
-              emoji.hide(driverState);
-            } else {
-              toolbox.hide(driverState);
-            }
-          }}
+          onLayout={toolbox.onLayout}
+          style={toolbox.style}
         />
-      </KeyboardInsetsView>
-      <TUIMessageToolBox
-        loginUserID={loginUserID}
-        convID={convID ?? ''}
-        convType={type ?? 1}
-        onLayout={toolbox.onLayout}
-        style={toolbox.style}
-      />
-      <TUIMessageEmoji
-        onEmojiDelPress={onEmojiDelPress}
-        onEmojiSelect={onEmojiSelect}
-        onMessageSendPress={onMessageSendPress}
-        onLayout={emoji.onLayout}
-        style={emoji.style}
-      />
-    </Fragment>
+        <TUIMessageEmoji
+          onEmojiDelPress={onEmojiDelPress}
+          onEmojiSelect={onEmojiSelect}
+          onMessageSendPress={onMessageSendPress}
+          onLayout={emoji.onLayout}
+          style={emoji.style}
+        />
+      </Fragment>
+    </GestureHandlerRootView>
   );
 };
 const styles = StyleSheet.create({

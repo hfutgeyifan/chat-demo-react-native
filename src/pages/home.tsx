@@ -1,4 +1,4 @@
-import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React from 'react';
 import {
   View,
@@ -7,21 +7,21 @@ import {
   ListRenderItem,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from 'react-native';
-import FastImage from 'react-native-fast-image';
 import {
   V2TimConversation,
   V2TimMessage,
   TencentImSDKPlugin,
   MessageElemType,
 } from 'react-native-tim-js';
-import {RootStackParamList} from '../interface';
-import {getCurrentTime} from '../TUIKit';
+import { RootStackParamList } from '../interface';
+import { getCurrentTime } from '../TUIKit';
 
 type Props = NativeStackScreenProps<RootStackParamList, 'Home'>;
 
-function HomeScreen({route, navigation}: Props) {
-  const {userID} = route.params;
+function HomeScreen({ route, navigation }: Props) {
+  const { userID } = route.params;
   const defaultFaceUrl =
     'https://qcloudimg.tencent-cloud.cn/raw/2c6e4177fcca03de1447a04d8ff76d9c.png';
   const [conversationList, setConversationList] = React.useState<
@@ -35,7 +35,7 @@ function HomeScreen({route, navigation}: Props) {
   }, []);
 
   const getConversationList = async () => {
-    const {code, data} = await TencentImSDKPlugin.v2TIMManager
+    const { code, data } = await TencentImSDKPlugin.v2TIMManager
       .getConversationManager()
       .getConversationList(15, '0');
     if (code === 0) {
@@ -44,7 +44,7 @@ function HomeScreen({route, navigation}: Props) {
   };
 
   const getLastMessageString = (lastMessage: V2TimMessage) => {
-    const {elemType, textElem} = lastMessage;
+    const { elemType, textElem } = lastMessage;
     if (elemType === MessageElemType.V2TIM_ELEM_TYPE_TEXT) {
       return textElem?.text ?? '';
     }
@@ -82,7 +82,7 @@ function HomeScreen({route, navigation}: Props) {
   const renderConversationItem: ListRenderItem<V2TimConversation> = ({
     item,
   }) => {
-    const {showName, faceUrl, lastMessage} = item;
+    const { showName, faceUrl, lastMessage } = item;
     const haveFaceUrl = !!faceUrl && faceUrl !== '';
     return (
       <TouchableOpacity
@@ -101,12 +101,11 @@ function HomeScreen({route, navigation}: Props) {
           });
         }}>
         <View style={styles.conversationItem}>
-          <FastImage
-            style={{width: 48, height: 48, borderRadius: 5}}
+          <Image
+            style={{ width: 48, height: 48, borderRadius: 5 }}
             source={{
               uri: haveFaceUrl ? faceUrl : defaultFaceUrl,
             }}
-            resizeMode={FastImage.resizeMode.contain}
           />
           <View style={styles.conversationDetail}>
             <View style={styles.showNameContainer}>
@@ -132,7 +131,7 @@ function HomeScreen({route, navigation}: Props) {
   return (
     <View style={styles.fill}>
       <FlatList
-        style={{flex: 1, width: '100%'}}
+        style={{ flex: 1, width: '100%' }}
         data={conversationList}
         renderItem={renderConversationItem}
       />
