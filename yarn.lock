@@ -6413,11 +6413,6 @@
   dependencies:
     "queue-microtask" "^1.2.2"
 
-"runes@^0.4.3":
-  "integrity" "sha512-K6p9y4ZyL9wPzA+PMDloNQPfoDGTiFYDvdlXznyGKgD10BJpcAosvATKrExRKOrNLgD8E7Um7WGW0lxsnOuNLg=="
-  "resolved" "https://registry.npmjs.org/runes/-/runes-0.4.3.tgz"
-  "version" "0.4.3"
-
 "safe-buffer@~5.1.0", "safe-buffer@~5.1.1", "safe-buffer@5.1.2":
   "integrity" "sha512-Gd2UZBJDkXlY7GbJxfsE8/nvKkUEU1G38c1siN6QP6a9PT9MmHB8GnpscSmMJSoF8LOIrt8ud/wPtojys4G6+g=="
   "resolved" "https://registry.npmjs.org/safe-buffer/-/safe-buffer-5.1.2.tgz"
