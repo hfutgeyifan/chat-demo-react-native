@@ -9,7 +9,6 @@ import ImageViewer from '../../ImageView';
 import Modal from 'react-native-modal';
 import { MessageDownload } from '../../../utils/message_download';
 import RNFS from 'react-native-fs';
-import { Gesture } from 'react-native-gesture-handler';
 import { ScreenWidth } from '@rneui/base';
 
 export const ImageElement = (props: {
@@ -139,14 +138,7 @@ export const ImageElement = (props: {
     }
   };
 
-  const longPressGesture = Gesture.Tap().onStart(() => {
-    setOpacity(1);
-    setIsVisible(true);
-    console.log(' press start in element');
-  });
-
   return (
-    // <GestureDetector gesture={longPressGesture}>
     <View>
       <TouchableOpacity
         activeOpacity={0.8}
@@ -191,7 +183,6 @@ export const ImageElement = (props: {
         />
       </Modal>
     </View>
-    // </GestureDetector>
   );
 };
 

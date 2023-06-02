@@ -1,6 +1,6 @@
 /// USERID
 export const LOGIN_USER_ID = '10043564';
 /// UserSig
-export const USER_SIG = 'eJwtzNsKgkAUheF3mVtD9hwbhS6CDAKVRF9AmHHYdGCcJLTo3RP1cn0L-i9p8jp*20BSwmIgu2Wjsc8BO1yYAgguldi*l7m13qMhKRUAVO*5ZOsz4MPOqrSUCQWpVrWjxzA7VwBbAd2cvajpbqqG9UlXndu8TD6oi7J2Q2Yn5qKC96GLTtfjGLID*f0BXHQwEQ__';
+export const USER_SIG = 'eJwtzEELgjAYxvHvsnPYOzeXE7p0SISwoIjopm6rN2mMJTGKvntDPT6-B-5fctodk7f2pCBpAmQxblTaDmhwZArAWSb4-L1U3ziHihSUA9B8xbJ0egZ86qgiz4QEIeWkOjj00ZkAmAt4i1l39nZZusqYx6X*pNAeumvt7rnZlg30gvHNoC3uQxuqNfn9AW6JMKM_';
 /// SDKAPPID
 export const SDKAPPID = 1400187352;

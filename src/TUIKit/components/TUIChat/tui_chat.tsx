@@ -1,6 +1,6 @@
 import { ThemeProvider } from '@rneui/themed';
 import React, { Fragment, useCallback, useMemo, useRef, useState } from 'react';
-import { Animated, findNodeHandle, StyleSheet } from 'react-native';
+import { Animated, findNodeHandle, StyleSheet, TouchableWithoutFeedback } from 'react-native';
 import { View } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import type { V2TimMessage } from 'react-native-tim-js';
@@ -39,11 +39,9 @@ import type { Driver } from './driver/driver';
 import { KeyboardDriver } from './driver/keyboardDriver';
 import { TUIMessageEmoji } from '../TUIMessageInput/tui_message_emoji';
 import { TUIMessageToolBox } from '../TUIMessageInput/tui_message_tool_box';
-import { Gesture, GestureDetector, GestureHandlerRootView } from 'react-native-gesture-handler';
 import type { TUIChatProps } from '../../interface';
 import { MessageAvatar } from '../TUIMessage/element/message_avatar';
 import { ScreenHeight, ScreenWidth } from '@rneui/base';
-// import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 export const TUIChat = (props: TUIChatProps) => {
   const {
@@ -217,91 +215,89 @@ const MessageViewWithInput = (props: TUIChatProps) => {
 
   const viewNode = useRef<View | null>();
 
-  const gesture = Gesture.Tap().onStart(() => {
+  const gesture = () => {
     driver?.hide(driverState);
-  });
+  };
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <Fragment>
-        <GestureDetector gesture={gesture}>
-          <Animated.View
-            style={[
-              styles.fill,
-              messageListContainerStyle,
-              { backgroundColor: 'white' },
-            ]}
-            ref={(ref: View | null | undefined) => (viewNode.current = ref)}
-            onLayout={() => {
-              viewNode.current?.measure((x, y, width, height) => {
-                keyboard.onFillMessageLayout(height);
-                emoji.onFillMessageLayout(height);
-                toolbox.onFillMessageLayout(height);
-              });
-            }}>
-            <TUIMessageList
-              MessageElement={messageItemOption?.ItemComponent ?? MessageElement}
-              onLoadMore={onLoadMore}
-              unmount={unMount}
-              onLayout={event => {
-                emoji.onMessageListLayout(event);
-                toolbox.onMessageListLayout(event);
-                keyboard.onMessageListLayout(event);
-              }}
-              onScroll={() => {
-                if (driver?.name === 'emoji') {
-                  emoji.shown && emoji.hide(driverState);
-                } else {
-                  toolbox.shown && toolbox.hide(driverState);
-                }
-              }}
-            />
-          </Animated.View>
-        </GestureDetector>
-        <KeyboardInsetsView
-          style={[mainStyle]}
-          onKeyboard={keyboard.createCallback(driverState)}
-          onLayout={onLayout}>
-          <TUIMessageInput
-            ref={tuiMessageInputRef}
-            loginUserID={loginUserID}
-            showFace={textInputOption?.showFace}
-            showSound={textInputOption?.showSound}
-            showToolBox={textInputOption?.showToolBox}
-            convID={convID ?? ''}
-            convType={type ?? 1}
-            onEmojiTap={() => {
-              emoji.toggle(driverState);
+    <Fragment>
+      <TouchableWithoutFeedback onPress={gesture}>
+        <Animated.View
+          style={[
+            styles.fill,
+            messageListContainerStyle,
+            { backgroundColor: 'white' },
+          ]}
+          ref={(ref: View | null | undefined) => (viewNode.current = ref)}
+          onLayout={() => {
+            viewNode.current?.measure((x, y, width, height) => {
+              keyboard.onFillMessageLayout(height);
+              emoji.onFillMessageLayout(height);
+              toolbox.onFillMessageLayout(height);
+            });
+          }}>
+          <TUIMessageList
+            MessageElement={messageItemOption?.ItemComponent ?? MessageElement}
+            onLoadMore={onLoadMore}
+            unmount={unMount}
+            onLayout={event => {
+              emoji.onMessageListLayout(event);
+              toolbox.onMessageListLayout(event);
+              keyboard.onMessageListLayout(event);
             }}
-            driverName={driver?.name}
-            onToolBoxTap={() => {
-              toolbox.toggle(driverState);
-            }}
-            hideAllPanel={() => {
+            onScroll={() => {
               if (driver?.name === 'emoji') {
-                emoji.hide(driverState);
+                emoji.shown && emoji.hide(driverState);
               } else {
-                toolbox.hide(driverState);
+                toolbox.shown && toolbox.hide(driverState);
               }
             }}
           />
-        </KeyboardInsetsView>
-        <TUIMessageToolBox
+        </Animated.View>
+      </TouchableWithoutFeedback>
+      <KeyboardInsetsView
+        style={[mainStyle]}
+        onKeyboard={keyboard.createCallback(driverState)}
+        onLayout={onLayout}>
+        <TUIMessageInput
+          ref={tuiMessageInputRef}
           loginUserID={loginUserID}
+          showFace={textInputOption?.showFace}
+          showSound={textInputOption?.showSound}
+          showToolBox={textInputOption?.showToolBox}
           convID={convID ?? ''}
           convType={type ?? 1}
-          onLayout={toolbox.onLayout}
-          style={toolbox.style}
+          onEmojiTap={() => {
+            emoji.toggle(driverState);
+          }}
+          driverName={driver?.name}
+          onToolBoxTap={() => {
+            toolbox.toggle(driverState);
+          }}
+          hideAllPanel={() => {
+            if (driver?.name === 'emoji') {
+              emoji.hide(driverState);
+            } else {
+              toolbox.hide(driverState);
+            }
+          }}
         />
-        <TUIMessageEmoji
-          onEmojiDelPress={onEmojiDelPress}
-          onEmojiSelect={onEmojiSelect}
-          onMessageSendPress={onMessageSendPress}
-          onLayout={emoji.onLayout}
-          style={emoji.style}
-        />
-      </Fragment>
-    </GestureHandlerRootView>
+      </KeyboardInsetsView>
+      <TUIMessageToolBox
+        loginUserID={loginUserID}
+        convID={convID ?? ''}
+        convType={type ?? 1}
+        onLayout={toolbox.onLayout}
+        style={toolbox.style}
+      />
+      <TUIMessageEmoji
+        onEmojiDelPress={onEmojiDelPress}
+        onEmojiSelect={onEmojiSelect}
+        onMessageSendPress={onMessageSendPress}
+        onLayout={emoji.onLayout}
+        style={emoji.style}
+      />
+    </Fragment>
   );
 };
 const styles = StyleSheet.create({

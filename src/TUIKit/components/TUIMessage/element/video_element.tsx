@@ -2,13 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { V2TimMessage, TencentImSDKPlugin } from 'react-native-tim-js';
 import { updateMessateItem, useTUIChatContext } from '../../../store';
 import { View } from 'react-native';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 import { Text, Image } from '@rneui/themed';
 import { MessageUtils } from '../../../utils/message';
 import { ScreenHeight, ScreenWidth } from '@rneui/base';
 import { VideoScreen } from '../../VideoScreen/video_screen';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import RNFS from 'react-native-fs';
 
 export const VideoElement = (props: {

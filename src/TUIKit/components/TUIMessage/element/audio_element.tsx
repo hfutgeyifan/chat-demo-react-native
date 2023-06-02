@@ -93,7 +93,7 @@ export const AudioElement = (props: { message: V2TimMessage }) => {
           .then(response => {
             const { code, data } = response;
             if (code === 0) {
-              stateMessage.soundElem = data.soundElem;
+              stateMessage.soundElem = data?.soundElem;
               setStateMessage(stateMessage);
             }
           });

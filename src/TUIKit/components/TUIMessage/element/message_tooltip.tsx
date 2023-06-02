@@ -1,10 +1,9 @@
 import { ScreenWidth } from '@rneui/base';
 import { Image, Text } from '@rneui/themed';
-import React, { Fragment, useState } from 'react';
-import { LayoutChangeEvent, LayoutRectangle, Modal } from 'react-native';
+import React, { Fragment, ReactNode, useState } from 'react';
+import { GestureResponderEvent, LayoutChangeEvent, LayoutRectangle, Modal, TouchableWithoutFeedback } from 'react-native';
 import { Keyboard } from 'react-native';
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import {
   MessageElemType,
   TencentImSDKPlugin,
@@ -21,6 +20,7 @@ import Clipboard from '@react-native-clipboard/clipboard';
 export const MessageToolTip: React.FC<{
   message: V2TimMessage;
   keyboardHeight?: number;
+  children?: ReactNode | undefined
 }> = props => {
   const [open, setOpen] = React.useState(false);
   const [positionY, setPositionY] = React.useState(0);
@@ -117,25 +117,25 @@ export const MessageToolTip: React.FC<{
     setOpen(false);
   };
 
-  const gesture = Gesture.LongPress().onStart(event => {
-    const { absoluteY, y } = event;
+  const gesture = (event: GestureResponderEvent) => {
+    const { pageY, locationY } = event.nativeEvent;
     const halfHeight = componentPosition!.height;
     if (Keyboard.isVisible()) {
       setTimeout(() => {
         setPositionY(
-          absoluteY - y + halfHeight + (props.keyboardHeight ?? 0) - 25,
+          pageY - locationY + halfHeight + (props.keyboardHeight ?? 0) - 25,
         );
         setOpen(true);
       }, 200);
     } else {
-      setPositionY(absoluteY - y + halfHeight);
+      setPositionY(pageY - locationY + halfHeight);
       setOpen(true);
     }
-  });
+  };
 
-  const closeTooltip = Gesture.Tap().onStart(() => {
+  const closeTooltip = () => {
     setOpen(false);
-  });
+  };
 
   const calculatePosition = (event: LayoutChangeEvent) => {
     const width = event.nativeEvent.layout.width;
@@ -159,11 +159,11 @@ export const MessageToolTip: React.FC<{
 
   return (
     <Fragment>
-      <GestureDetector gesture={gesture}>
+      <TouchableWithoutFeedback onLongPress={gesture}>
         <View ref={ref => (viewRef.current = ref)} onLayout={calculatePosition}>
           {props.children}
         </View>
-      </GestureDetector>
+      </TouchableWithoutFeedback>
 
       {open && (
         <Modal
@@ -171,7 +171,7 @@ export const MessageToolTip: React.FC<{
           transparent
           onRequestClose={() => setOpen(false)}
           animationType="fade">
-          <GestureDetector gesture={closeTooltip}>
+          <TouchableWithoutFeedback onPress={closeTooltip}>
             <View
               style={{
                 flex: 1,
@@ -188,7 +188,7 @@ export const MessageToolTip: React.FC<{
                 {getPopOverContent()}
               </View>
             </View>
-          </GestureDetector>
+          </TouchableWithoutFeedback>
         </Modal>
       )}
     </Fragment>
